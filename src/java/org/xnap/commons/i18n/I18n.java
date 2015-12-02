@@ -216,6 +216,16 @@ public class I18n {
 		sourceCodeLocale = locale;
 	}
 
+	public final String trInternal(String text)
+	{
+		try {
+			return bundle.getString(text);
+		}
+		catch (MissingResourceException e) {
+			return text;
+		}
+	}
+	
 	/**
 	 * Returns <code>text</code> translated into the currently selected
 	 * language. Every user-visible string in the program must be wrapped into
@@ -228,12 +238,7 @@ public class I18n {
 	 */
 	public final String tr(String text)
 	{
-		try {
-			return bundle.getString(text);
-		}
-		catch (MissingResourceException e) {
-			return text;
-		}
+		return MessageFormat.format(trInternal(text), null);
 	}
 
 	/**
@@ -255,7 +260,7 @@ public class I18n {
 	 */
 	public final String tr(String text, Object[] objects)
 	{
-		return MessageFormat.format(tr(text), objects);
+		return MessageFormat.format(trInternal(text), objects);
 	}
 
 	/**
@@ -492,7 +497,7 @@ public class I18n {
 			return text;
 		} else {
 			String key = context + CONTEXT_GLUE + text; 
-			String translated = tr(key);
+			String translated = trInternal(key);
 			// if no translation was found return text in source locale
 			return translated == key ? text : translated;
 		}
